@@ -1,0 +1,62 @@
+{
+  "Name": "Ancient Synth",
+  "Version": "3.0.0",
+  "Factory Info": {
+    "Vendor": "YourStudio",
+    "URL": "",
+    "E-Mail": "",
+    "Flags": {
+      "Unicode": true,
+      "Classes Discardable": false,
+      "Component Non Discardable": false,
+    },
+  },
+  "Classes": [
+    {
+      "CID": "ABCDEF019182FAEB416E536E41533330",
+      "Category": "Audio Module Class",
+      "Name": "Ancient Synth",
+      "Vendor": "YourStudio",
+      "Version": "3.0.0",
+      "SDKVersion": "VST 3.7.12",
+      "Sub Categories": [
+        "Instrument",
+        "Instrument",
+        "Synth",
+      ],
+      "Class Flags": 2,
+      "Cardinality": 2147483647,
+      "Snapshots": [
+      ],
+    },
+    {
+      "CID": "ABCDEF011234ABCD416E536E41533330",
+      "Category": "Component Controller Class",
+      "Name": "Ancient Synth",
+      "Vendor": "YourStudio",
+      "Version": "3.0.0",
+      "SDKVersion": "VST 3.7.12",
+      "Sub Categories": [
+        "Instrument",
+        "Instrument",
+        "Synth",
+      ],
+      "Class Flags": 2,
+      "Cardinality": 2147483647,
+      "Snapshots": [
+      ],
+    },
+    {
+      "CID": "ABCDEF01C0DEF00D416E536E41533330",
+      "Category": "Plugin Compatibility Class",
+      "Name": "Ancient Synth",
+      "Vendor": "YourStudio",
+      "Version": "3.0.0",
+      "SDKVersion": "VST 3.7.12",
+      "Class Flags": 0,
+      "Cardinality": 2147483647,
+      "Snapshots": [
+      ],
+    },
+  ],
+}

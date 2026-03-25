@@ -1,0 +1,7 @@
+/Volumes/Rocket_XTRM/Projects/AncientSynth/build/juce_build/tools/CMakeFiles/install.dir
+/Volumes/Rocket_XTRM/Projects/AncientSynth/build/juce_build/tools/CMakeFiles/ALL_BUILD.dir
+/Volumes/Rocket_XTRM/Projects/AncientSynth/build/juce_build/tools/CMakeFiles/ZERO_CHECK.dir
+/Volumes/Rocket_XTRM/Projects/AncientSynth/build/juce_build/tools/modules/CMakeFiles/install.dir
+/Volumes/Rocket_XTRM/Projects/AncientSynth/build/juce_build/tools/extras/Build/CMakeFiles/install.dir
+/Volumes/Rocket_XTRM/Projects/AncientSynth/build/juce_build/tools/extras/Build/juceaide/CMakeFiles/juceaide.dir
+/Volumes/Rocket_XTRM/Projects/AncientSynth/build/juce_build/tools/extras/Build/juceaide/CMakeFiles/install.dir
