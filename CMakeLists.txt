@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 project(AncientSynth VERSION 3.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "" FORCE)
+set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE STRING "" FORCE)
 
 # JUCE_PATH can be set by the setup script to a pre-cloned local copy.
 # This avoids git safe.directory issues when building on external drives as sudo.
@@ -20,8 +20,11 @@ endif()
 add_subdirectory("${JUCE_PATH}" juce_build)
 
 juce_add_plugin(AncientSynth
-    COMPANY_NAME            "YourStudio"
-    PLUGIN_MANUFACTURER_CODE AnSn
+    COMPANY_NAME            "Tully EDM Vibe"
+    COMPANY_COPYRIGHT       "(c)(p) 2026 Tully EDM Vibe"
+    COMPANY_EMAIL           "info@tullyedmvibe.com"
+    BUNDLE_ID               com.TullyEDMVibe.AncientSynth
+    PLUGIN_MANUFACTURER_CODE Tull
     PLUGIN_CODE             AS30
     FORMATS                 AU VST3 Standalone
     PRODUCT_NAME            "Ancient Synth"
