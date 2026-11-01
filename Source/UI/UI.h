@@ -555,8 +555,9 @@ public:
     void paint(juce::Graphics& g) override {
         AncientLAF::bg(g,getLocalBounds());
         AncientLAF::sectionLabel(g,{12,8,160,14},"Oscillator");
-        AncientLAF::sectionLabel(g,{12,110,120,14},"Amplitude");
-        AncientLAF::sectionLabel(g,{12,208,80,14},"Voice");
+        // section labels sit in the 14 px gaps that resized() leaves above each row
+        AncientLAF::sectionLabel(g,ampLbl_,"Amplitude");
+        AncientLAF::sectionLabel(g,voiceLbl_,"Voice");
     }
     void resized() override {
         int kw=54; auto b=getLocalBounds().reduced(12,8);
@@ -575,11 +576,11 @@ public:
         for(auto* k:{&ksB_,&ksPk_,&ksSt_}) k->setBounds(r2.removeFromLeft(kw));
         r2.removeFromLeft(4);
         for(auto* k:{&wgSt_,&wgDm_}) k->setBounds(r2.removeFromLeft(kw));
-        b.removeFromTop(8); b.removeFromTop(14);
+        b.removeFromTop(8); ampLbl_=b.removeFromTop(14).withWidth(120);
         auto r3=b.removeFromTop(82);
         auto ev=r3.removeFromRight(160); envD_.setBounds(ev.reduced(0,8));
         for(auto* k:{&aA_,&aD_,&aS_,&aR_}) k->setBounds(r3.removeFromLeft(kw));
-        b.removeFromTop(8); b.removeFromTop(14);
+        b.removeFromTop(8); voiceLbl_=b.removeFromTop(14).withWidth(80);
         auto r4=b.removeFromTop(70);
         for(auto* k:{&gl_,&dt_,&sp_}) k->setBounds(r4.removeFromLeft(kw));
         r4.removeFromLeft(8);
@@ -588,6 +589,7 @@ public:
         ply_.setBounds(r4.removeFromLeft(88).withSizeKeepingCentre(88,22));
     }
 private:
+    juce::Rectangle<int> ampLbl_{12,134,120,14}, voiceLbl_{12,238,80,14};
     juce::ComboBox eng_,fmA_,ksC_,grS_,uni_,ply_;
     Knob wtPos_,wtMph_,fmFb_,grSz_,grSc_,grDn_,grPr_,ksB_,ksPk_,ksSt_,wgSt_,wgDm_,aA_,aD_,aS_,aR_,gl_,dt_,sp_;
     EnvDisplay envD_;
@@ -644,10 +646,10 @@ public:
     void paint(juce::Graphics& g) override {
         AncientLAF::bg(g,getLocalBounds());
         AncientLAF::sectionLabel(g,{12,8,80,14},"Filter");
-        AncientLAF::sectionLabel(g,{12,180,60,14},"LFO 1");
-        AncientLAF::sectionLabel(g,{264,180,60,14},"LFO 2");
-        AncientLAF::sectionLabel(g,{12,272,60,14},"Scale");
-        AncientLAF::sectionLabel(g,{12,362,100,14},"Arpeggiator");
+        AncientLAF::sectionLabel(g,lfo1Lbl_,"LFO 1");
+        AncientLAF::sectionLabel(g,lfo2Lbl_,"LFO 2");
+        AncientLAF::sectionLabel(g,scaleLbl_,"Scale");
+        AncientLAF::sectionLabel(g,arpLbl_,"Arpeggiator");
     }
     void resized() override {
         int kw=50; auto b=getLocalBounds().reduced(12,8);
@@ -660,32 +662,35 @@ public:
         for(auto* k:{&fc_,&fr_,&fd_,&fkt_,&fe_}) k->setBounds(r2.removeFromLeft(kw));
         r2.removeFromLeft(8);
         for(auto* k:{&faA_,&faD_,&faS_,&faR_}) k->setBounds(r2.removeFromLeft(kw));
-        b.removeFromTop(10); b.removeFromTop(14);
+        b.removeFromTop(10); { auto l=b.removeFromTop(14); lfo1Lbl_=l.withWidth(60); lfo2Lbl_=l.withTrimmedLeft(l.getWidth()/2-4).withWidth(60); }
         // LFO rows
         auto lr=b.removeFromTop(70); auto lr1=lr.removeFromLeft(lr.getWidth()/2-4); auto& lr2=lr;
-        l1r_.setBounds(lr1.removeFromLeft(kw)); l1d_.setBounds(lr1.removeFromLeft(kw));
-        l1s_.setBounds(lr1.removeFromLeft(86).withSizeKeepingCentre(86,22));
-        lr1.removeFromLeft(4); l1D_.setBounds(lr1.removeFromLeft(86).withSizeKeepingCentre(86,22));
-        lr1.removeFromLeft(4); l1Sy_.setBounds(lr1.removeFromLeft(50).withSizeKeepingCentre(50,20));
-        l2r_.setBounds(lr2.removeFromLeft(kw)); l2d_.setBounds(lr2.removeFromLeft(kw));
-        l2s_.setBounds(lr2.removeFromLeft(86).withSizeKeepingCentre(86,22));
-        lr2.removeFromLeft(4); l2D_.setBounds(lr2.removeFromLeft(86).withSizeKeepingCentre(86,22));
-        lr2.removeFromLeft(4); l2Sy_.setBounds(lr2.removeFromLeft(50).withSizeKeepingCentre(50,20));
-        b.removeFromTop(10); b.removeFromTop(14);
+        // each LFO: two knobs, then a column with shape / destination / SYNC stacked,
+        // so both LFOs fit side by side without the SYNC switch covering a menu
+        auto lfo=[&](juce::Rectangle<int> r, Knob& rate, Knob& depth, juce::ComboBox& shape, juce::ComboBox& dest, juce::ToggleButton& sync){
+            rate.setBounds(r.removeFromLeft(kw)); depth.setBounds(r.removeFromLeft(kw)); r.removeFromLeft(6);
+            auto col=r.removeFromLeft(juce::jmin(150,r.getWidth()));
+            shape.setBounds(col.removeFromTop(22)); col.removeFromTop(3);
+            dest.setBounds(col.removeFromTop(22)); col.removeFromTop(2);
+            sync.setBounds(col.removeFromTop(20).withWidth(70)); };
+        lfo(lr1,l1r_,l1d_,l1s_,l1D_,l1Sy_);
+        lfo(lr2,l2r_,l2d_,l2s_,l2D_,l2Sy_);
+        b.removeFromTop(10); scaleLbl_=b.removeFromTop(14).withWidth(60);
         // Scale
         auto sr=b.removeFromTop(26);
         sc_.setBounds(sr.removeFromLeft(180).reduced(0,3)); sr.removeFromLeft(4);
         rt_.setBounds(sr.removeFromLeft(60).reduced(0,3));
         scKeys_.setBounds(b.removeFromTop(42));
-        b.removeFromTop(10); b.removeFromTop(14);
+        b.removeFromTop(10); arpLbl_=b.removeFromTop(14).withWidth(100);
         // Arp
         auto ar=b.removeFromTop(70);
         arpOn_.setBounds(ar.removeFromLeft(60).withSizeKeepingCentre(60,20)); ar.removeFromLeft(6);
-        am_.setBounds(ar.removeFromLeft(108).reduced(0,3)); ar.removeFromLeft(6);
-        ar_.setBounds(ar.removeFromLeft(78).reduced(0,3)); ar.removeFromLeft(8);
+        am_.setBounds(ar.removeFromLeft(108).withSizeKeepingCentre(108,22)); ar.removeFromLeft(6);
+        ar_.setBounds(ar.removeFromLeft(78).withSizeKeepingCentre(78,22)); ar.removeFromLeft(8);
         agK_.setBounds(ar.removeFromLeft(kw)); asK_.setBounds(ar.removeFromLeft(kw));
     }
 private:
+    juce::Rectangle<int> lfo1Lbl_, lfo2Lbl_, scaleLbl_, arpLbl_;
     juce::ComboBox ft_,l1s_,l1D_,l2s_,l2D_,sc_,rt_,am_,ar_;
     Knob fc_,fr_,fd_,fkt_,fe_,faA_,faD_,faS_,faR_,l1r_,l1d_,l2r_,l2d_,agK_,asK_;
     juce::ToggleButton l1Sy_{"SYNC"},l2Sy_{"SYNC"},arpOn_{"ARP"};
@@ -729,19 +734,20 @@ public:
     void paint(juce::Graphics& g) override {
         AncientLAF::bg(g,getLocalBounds());
         AncientLAF::sectionLabel(g,{12,8,80,14},"Reverb");
-        AncientLAF::sectionLabel(g,{12,92,80,14},"Chorus");
-        AncientLAF::sectionLabel(g,{12,166,80,14},"Delay");
-        AncientLAF::sectionLabel(g,{12,240,180,14},"Distortion  /  EQ");
-        AncientLAF::sectionLabel(g,{12,314,80,14},"Master");
+        AncientLAF::sectionLabel(g,lbl_[0],"Chorus");
+        AncientLAF::sectionLabel(g,lbl_[1],"Delay");
+        AncientLAF::sectionLabel(g,lbl_[2].withWidth(180),"Distortion  /  EQ");
+        AncientLAF::sectionLabel(g,lbl_[3],"Master");
     }
     void resized() override {
         int kw=56; auto b=getLocalBounds().reduced(12,8);
-        auto row=[&](int skip)->juce::Rectangle<int>{b.removeFromTop(skip);return b.removeFromTop(70);};
+        int li=-1;   // each 14 px gap above a row holds that row's section label
+        auto row=[&](int skip)->juce::Rectangle<int>{auto gap=b.removeFromTop(skip); if(li>=0&&li<4) lbl_[li]=gap.withWidth(80); ++li; return b.removeFromTop(70);};
         auto r1=row(16); for(auto* k:{&rMx_,&rSz_,&rDm_}) k->setBounds(r1.removeFromLeft(kw));
         auto r2=row(14); for(auto* k:{&cMx_,&cRt_,&cDp_}) k->setBounds(r2.removeFromLeft(kw));
         auto r3=row(14);
         for(auto* k:{&dMx_,&dTm_,&dFb_}) k->setBounds(r3.removeFromLeft(kw));
-        dSync_.setBounds(r3.removeFromLeft(52).withSizeKeepingCentre(52,20));
+        r3.removeFromLeft(6); dSync_.setBounds(r3.removeFromLeft(70).withSizeKeepingCentre(70,20));
         auto r4=row(14);
         diA_.setBounds(r4.removeFromLeft(kw)); diT_.setBounds(r4.removeFromLeft(kw));
         diTy_.setBounds(r4.removeFromLeft(80).withSizeKeepingCentre(80,22)); r4.removeFromLeft(12);
@@ -750,6 +756,7 @@ public:
         for(auto* k:{&vl_,&gn_,&tu_,&wd_}) k->setBounds(r5.removeFromLeft(kw));
     }
 private:
+    juce::Rectangle<int> lbl_[4] { {12,94,80,14}, {12,178,80,14}, {12,262,80,14}, {12,346,80,14} };
     juce::ComboBox diTy_; juce::ToggleButton dSync_{"SYNC"};
     Knob rMx_,rSz_,rDm_,cMx_,cRt_,cDp_,dMx_,dTm_,dFb_,diA_,diT_,eL_,eM_,eH_,vl_,gn_,tu_,wd_;
     std::unique_ptr<SA> rmA_,rsA_,rdA_,cmA_,crA_,cdA_,dmA_,dtA_,dfA_,daA_,dtoA_,elA_,emA_,ehA_,vlA_,gnA_,tuA_,wdA_;
@@ -806,15 +813,16 @@ public:
     void paint(juce::Graphics& g) override {
         AncientLAF::bg(g,getLocalBounds());
         AncientLAF::sectionLabel(g,{12,8,120,14},"Modulation Matrix");
-        AncientLAF::sectionLabel(g,{12,260,120,14},"Historical Tuning");
+        AncientLAF::sectionLabel(g,{12,266,120,14},"Historical Tuning");
         // Column headers
         auto b = getLocalBounds().reduced(12,8);
         b.removeFromTop(24);
         auto hdr = b.removeFromTop(16);
         g.setFont(Fonts::label(10.f)); g.setColour(Pal::TextFaint);
-        g.drawText("SOURCE", hdr.removeFromLeft(140), juce::Justification::centredLeft);
-        g.drawText("DESTINATION", hdr.removeFromLeft(140), juce::Justification::centredLeft);
-        g.drawText("AMOUNT", hdr, juce::Justification::centredLeft);
+        hdr.removeFromLeft(48);   // slot-number column (matches resized())
+        g.drawText("SOURCE", hdr.removeFromLeft(142), juce::Justification::centredLeft);
+        g.drawText("DESTINATION", hdr.removeFromLeft(142), juce::Justification::centredLeft);
+        g.drawText("AMOUNT", hdr.removeFromLeft(54), juce::Justification::centred);
     }
 
     void resized() override {

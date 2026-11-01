@@ -72,3 +72,13 @@ target_link_libraries(AncientSynth PRIVATE
     juce::juce_recommended_config_flags
     juce::juce_recommended_warning_flags
 )
+
+# Demo-video renderer (cmake -DAS_VIDEO=ON): ASVideo outDir [scale]
+option(AS_VIDEO "Build the ASVideo demo renderer" OFF)
+if(AS_VIDEO)
+  juce_add_console_app(ASVideo PRODUCT_NAME "ASVideo")
+  target_sources(ASVideo PRIVATE Tests/VideoRender.cpp)
+  target_include_directories(ASVideo PRIVATE ${CMAKE_SOURCE_DIR}/Source)
+  target_compile_definitions(ASVideo PRIVATE JucePlugin_Name="Ancient Synth" JucePlugin_VersionString="3.1.0" JucePlugin_IsSynth=1 JucePlugin_WantsMidiInput=1 JucePlugin_ProducesMidiOutput=0 JucePlugin_IsMidiEffect=0 JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
+  target_link_libraries(ASVideo PRIVATE juce::juce_audio_utils juce::juce_dsp PUBLIC juce::juce_recommended_config_flags)
+endif()
