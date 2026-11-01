@@ -473,6 +473,12 @@ AncientSynthEditor::AncientSynthEditor(AncientSynthProcessor& p)
     prev_.onClick=[this]{ proc_.getPresets().prev(); updatePatch(); };
     next_.onClick=[this]{ proc_.getPresets().next(); updatePatch(); };
     addAndMakeVisible(prev_); addAndMakeVisible(next_);
+    prev_.setTooltip("Previous preset"); next_.setTooltip("Next preset");
+    scCombo_.setTooltip("Historical scale: notes you play are mapped to this scale.");
+    rtCombo_.setTooltip("Root note of the scale.");
+    browser_.setTooltip("Preset browser - click a preset to load it.");
+    xyPad_.setTooltip("Drag: X = filter cutoff, Y = resonance.");
+    scope_.setTooltip("Output oscilloscope.");
 
     for (const char* s : MicrotonalScale::kNames) scCombo_.addItem(s, scCombo_.getNumItems()+1);
     for (const char* n : {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"})
@@ -501,7 +507,7 @@ AncientSynthEditor::AncientSynthEditor(AncientSynthProcessor& p)
     addAndMakeVisible(footer_);
 
     updatePatch();
-    startTimerHz(24);
+    startTimerHz(30);
 }
 
 void AncientSynthEditor::timerCallback() {

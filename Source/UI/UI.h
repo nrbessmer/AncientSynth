@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <set>
 #include "../DSP.h"
 #include "../Presets.h"
@@ -55,6 +56,10 @@ public:
         float cx=x+w*.5f, cy=y+h*.5f, r=std::min(w,h)*.38f;
         auto  pi = juce::MathConstants<float>::pi;
 
+        if (s.isMouseOverOrDragging()) {   // hover glow
+            g.setColour(Pal::Amber.withAlpha(s.isMouseButtonDown()?0.22f:0.12f));
+            g.fillEllipse(cx-r*1.12f,cy-r*1.12f,r*2.24f,r*2.24f);
+        }
         juce::Path track; track.addCentredArc(cx,cy,r,r,0,startA,endA,true);
         g.setColour(Pal::Border);
         g.strokePath(track,juce::PathStrokeType(2.5f,juce::PathStrokeType::curved,juce::PathStrokeType::rounded));
@@ -137,7 +142,7 @@ class Knob : public juce::Component {
 public:
     juce::Slider slider;
     Knob(const juce::String& lbl, juce::Colour ac=Pal::Amber) : lbl_(lbl) {
-        slider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        slider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
         slider.setTextBoxStyle(juce::Slider::NoTextBox,false,0,0);
         slider.setColour(juce::Slider::rotarySliderFillColourId,ac);
         slider.setPopupDisplayEnabled(true,true,nullptr);
@@ -145,7 +150,7 @@ public:
     }
     void resized() override { slider.setBounds(getLocalBounds().withTrimmedBottom(16).reduced(2)); }
     void paint(juce::Graphics& g) override {
-        g.setFont(Fonts::label(10.f)); g.setColour(Pal::TextDim);
+        g.setFont(Fonts::label(10.f)); g.setColour(slider.isMouseOverOrDragging()?Pal::Text:Pal::TextDim);
         g.drawText(lbl_,getLocalBounds().removeFromBottom(16),juce::Justification::centred);
     }
 private: juce::String lbl_;
@@ -154,7 +159,7 @@ private: juce::String lbl_;
 // ─────────────────────────────────────────────────────────────────────────────
 //  OSCILLOSCOPE
 // ─────────────────────────────────────────────────────────────────────────────
-class Oscilloscope : public juce::Component {
+class Oscilloscope : public juce::Component, public juce::SettableTooltipClient {
 public:
     void pushBuffer(const juce::AudioBuffer<float>& b) {
         int n=std::min(b.getNumSamples(),(int)kN);
@@ -208,7 +213,7 @@ private: float a_=.01f,d_=.2f,s_=.8f,r_=.5f;
 // ─────────────────────────────────────────────────────────────────────────────
 //  XY PAD
 // ─────────────────────────────────────────────────────────────────────────────
-class XYPad : public juce::Component {
+class XYPad : public juce::Component, public juce::SettableTooltipClient {
 public:
     void bind(juce::AudioProcessorValueTreeState& apvts,const char* xi,const char* yi){
         xs_.setRange(0,1); ys_.setRange(0,1);
@@ -278,7 +283,7 @@ private: const MicrotonalScale* sc_=nullptr;
 // ─────────────────────────────────────────────────────────────────────────────
 //  PATCH BROWSER
 // ─────────────────────────────────────────────────────────────────────────────
-class PatchBrowser : public juce::Component,
+class PatchBrowser : public juce::Component, public juce::SettableTooltipClient,
                      private juce::ListBoxModel, private juce::Button::Listener {
 public:
     std::function<void(int)> onSelect;
@@ -408,11 +413,96 @@ private:
 using SA = juce::AudioProcessorValueTreeState::SliderAttachment;
 using CA = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
 using BA = juce::AudioProcessorValueTreeState::ButtonAttachment;
+// every control gets a tooltip and (knobs) a double-click reset, from its parameter ID
+static juce::String asTip(const char* id){
+    static const std::map<juce::String,juce::String> t = {
+        { "engine", "Sound engine: Wavetable, FM, Granular, Karplus (plucked string) or Waveguide (blown/bowed)." },
+        { "wt_shape", "Wavetable shape." },
+        { "wt_pos", "Position in the wavetable - morphs the tone." },
+        { "wt_morph", "Smoothly blends neighbouring waves." },
+        { "fm_algo", "FM routing of the operators - each algorithm has its own character." },
+        { "fm_feedback", "FM feedback: from pure to gritty." },
+        { "gr_size", "Granular: grain length." },
+        { "gr_scatter", "Granular: how far grains jump around the source." },
+        { "gr_density", "Granular: number of grains (sparse to cloud)." },
+        { "gr_pitch_rnd", "Granular: random pitch per grain (shimmer)." },
+        { "gr_source", "Granular: source sound the grains are taken from." },
+        { "ks_body", "Plucked string: body resonance." },
+        { "ks_pick", "Plucked string: pick position (bright near the bridge)." },
+        { "ks_color", "Plucked string: excitation colour." },
+        { "ks_stretch", "Plucked string: how long the string rings." },
+        { "wg_stiff", "Waveguide: stiffness (bell-like at high values)." },
+        { "wg_damp", "Waveguide: damping (darker, shorter)." },
+        { "amp_attack", "Fade-in of each note." },
+        { "amp_decay", "Time to fall to the sustain level." },
+        { "amp_sustain", "Level while a key is held." },
+        { "amp_release", "Fade-out after release." },
+        { "filt_type", "Filter type." },
+        { "filt_cutoff", "Filter brightness." },
+        { "filt_res", "Filter resonance." },
+        { "filt_drive", "Drive into the filter." },
+        { "filt_env_amt", "How far the filter envelope moves the cutoff." },
+        { "filt_keytrack", "Higher notes open the filter more." },
+        { "filt_attack", "Filter envelope attack." },
+        { "filt_decay", "Filter envelope decay." },
+        { "filt_sustain", "Filter envelope sustain." },
+        { "filt_release", "Filter envelope release." },
+        { "lfo1_rate", "LFO 1 speed." },
+        { "lfo1_depth", "LFO 1 amount." },
+        { "lfo1_shape", "LFO 1 wave shape." },
+        { "lfo1_dest", "What LFO 1 moves." },
+        { "lfo1_sync", "Sync LFO 1 to the host tempo." },
+        { "lfo2_rate", "LFO 2 speed." },
+        { "lfo2_depth", "LFO 2 amount." },
+        { "lfo2_shape", "LFO 2 wave shape." },
+        { "lfo2_dest", "What LFO 2 moves." },
+        { "lfo2_sync", "Sync LFO 2 to the host tempo." },
+        { "glide", "Pitch slide time between notes." },
+        { "detune", "Detune of the unison voices." },
+        { "unison", "Number of stacked voices." },
+        { "unison_spread", "Stereo spread of the unison voices." },
+        { "poly_mode", "Poly, Mono or Legato." },
+        { "scale", "Historical scale the notes are mapped to." },
+        { "scale_root", "Root of the scale." },
+        { "arp_on", "Arpeggiator on/off." },
+        { "arp_mode", "Arpeggiator pattern." },
+        { "arp_rate", "Arpeggiator speed." },
+        { "arp_gate", "Arpeggiator note length." },
+        { "arp_swing", "Arpeggiator swing." },
+        { "fx_rev_mix", "Reverb amount." },
+        { "fx_rev_size", "Reverb size." },
+        { "fx_rev_damp", "Reverb darkness." },
+        { "fx_chr_mix", "Chorus amount." },
+        { "fx_chr_rate", "Chorus speed." },
+        { "fx_chr_depth", "Chorus depth." },
+        { "fx_dly_mix", "Delay amount." },
+        { "fx_dly_time", "Delay time." },
+        { "fx_dly_fb", "Delay repeats." },
+        { "fx_dly_sync", "Sync delay to tempo." },
+        { "fx_dist_amt", "Distortion amount." },
+        { "fx_dist_tone", "Distortion tone." },
+        { "fx_dist_type", "Distortion type." },
+        { "fx_eq_lo", "Low EQ." },
+        { "fx_eq_mid", "Mid EQ." },
+        { "fx_eq_hi", "High EQ." },
+        { "master_vol", "Output volume." },
+        { "master_gain", "Output gain." },
+        { "master_tune", "Master tuning." },
+        { "stereo_width", "Stereo width." },
+        { "tuning_system", "Historical tuning system (just, Pythagorean, maqam...)." },
+        { "tuning_root", "Root note of the tuning system." },
+    };
+    auto it=t.find(id); return it!=t.end()?it->second:juce::String(); }
 static auto mkSA(juce::AudioProcessorValueTreeState& a,const char* id,juce::Slider& s){
+    s.setTooltip(asTip(id)+"  (double-click: reset)");
+    s.setMouseDragSensitivity(180);
+    if(auto* p=a.getParameter(id)) s.setDoubleClickReturnValue(true,(double)a.getParameterRange(id).convertFrom0to1(p->getDefaultValue()));
     return std::make_unique<SA>(a,id,s);}
 static auto mkCA(juce::AudioProcessorValueTreeState& a,const char* id,juce::ComboBox& c){
+    c.setTooltip(asTip(id));
     return std::make_unique<CA>(a,id,c);}
 static auto mkBA(juce::AudioProcessorValueTreeState& a,const char* id,juce::Button& b){
+    b.setTooltip(asTip(id));
     return std::make_unique<BA>(a,id,b);}
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -785,6 +875,7 @@ private:
     Oscilloscope scope_;
     XYPad xyPad_;
     juce::Label footer_;
+    juce::TooltipWindow tooltips_{this,450};
     std::unique_ptr<CA> scA_,rtA_;
     void timerCallback() override;
     void updatePatch();
