@@ -8,6 +8,7 @@
 #include "DSP.h"
 #include "Presets.h"
 #include "UI/UI.h"
+#include "TullyLogoData.h"
 
 using namespace juce;
 
@@ -544,6 +545,16 @@ void AncientSynthEditor::paint(Graphics& g) {
     g.fillRect(0, getHeight()-21, getWidth(), 1);
     g.fillRect(206, 53, 1, getHeight()-74);
     g.fillRect(getWidth()-207, 53, 1, getHeight()-74);
+
+    // Tully EDM Vibe brand block, right end of the header
+    static const juce::Image tully = juce::ImageCache::getFromMemory (TullyLogoData::png, (int) TullyLogoData::pngSize);
+    const int bx = getWidth() - 214;
+    if (tully.isValid())
+        g.drawImageWithin (tully, bx, 4, 44, 44, juce::RectanglePlacement::centred, false);
+    g.setColour (Pal::Amber); g.setFont (Fonts::label (11.f));
+    g.drawText ("TULLY EDM VIBE", bx + 50, 9, 160, 16, juce::Justification::centredLeft);
+    g.setColour (Pal::TextDim); g.setFont (Fonts::mono (10.f));
+    g.drawText ("info@tullyedmvibe.com", bx + 50, 27, 160, 16, juce::Justification::centredLeft);
 }
 
 void AncientSynthEditor::resized() {
@@ -558,6 +569,7 @@ void AncientSynthEditor::resized() {
     auto sc = hdr.removeFromLeft(230); sc.reduce(8,12);
     scCombo_.setBounds(sc.removeFromLeft(155).reduced(0,2));
     sc.removeFromLeft(4); rtCombo_.setBounds(sc.reduced(0,2));
+    hdr.removeFromRight(216);                 // brand block (logo + email), drawn in paint()
     vLabel_.setBounds(hdr.reduced(8,14));
     b.removeFromTop(1);
     footer_.setBounds(b.removeFromBottom(20).reduced(8,2));
