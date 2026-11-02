@@ -1,0 +1,203 @@
+<svg viewBox="0 0 980 640" xmlns="http://www.w3.org/2000/svg" style="font-family:system-ui,sans-serif">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d4aa40"/><stop offset="100%" stop-color="#e8a850"/></linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="980" height="640" fill="#080a10" rx="8"/>
+  <!-- Header bar -->
+  <rect width="980" height="52" fill="#0c0e16"/>
+  <line x1="0" y1="52" x2="980" y2="52" stroke="#252838" stroke-width="1"/>
+  <!-- Title -->
+  <text x="20" y="33" fill="#d4aa40" font-size="18" font-weight="700" letter-spacing="2">⟐ ANCIENT SYNTH</text>
+  <!-- Preset nav -->
+  <rect x="200" y="12" width="28" height="28" rx="4" fill="#12141e" stroke="#252838"/>
+  <text x="210" y="31" fill="#b0a898" font-size="14">◄</text>
+  <rect x="232" y="12" width="180" height="28" rx="4" fill="#12141e" stroke="#252838"/>
+  <text x="280" y="31" fill="#f0e8dc" font-size="12">Sumerian Lyre</text>
+  <rect x="416" y="12" width="28" height="28" rx="4" fill="#12141e" stroke="#252838"/>
+  <text x="426" y="31" fill="#b0a898" font-size="14">►</text>
+  <!-- Voice count -->
+  <text x="900" y="33" fill="#807468" font-size="11">3 voices</text>
+
+  <!-- Left panel - Presets -->
+  <rect x="5" y="57" width="200" height="563" rx="6" fill="#12141e" stroke="#252838"/>
+  <text x="18" y="80" fill="#807468" font-size="9" letter-spacing="1.5">PRESETS</text>
+  <!-- Category headers and items -->
+  <rect x="10" y="90" width="190" height="20" rx="2" fill="#080a10"/>
+  <text x="22" y="104" fill="#d4aa40" font-size="9" letter-spacing="1">▾ LEADS</text>
+  <text x="170" y="104" fill="#807468" font-size="8">6</text>
+  <rect x="10" y="112" width="190" height="22" rx="3" fill="rgba(212,170,64,0.12)"/>
+  <circle cx="22" cy="123" r="3" fill="#d4aa40"/>
+  <text x="32" y="127" fill="#d4aa40" font-size="10.5">Sumerian Lyre</text>
+  <circle cx="22" cy="143" r="3" fill="#d4aa40"/>
+  <text x="32" y="147" fill="#b0a898" font-size="10.5">Mizmar Reed</text>
+  <circle cx="22" cy="163" r="3" fill="#d4aa40"/>
+  <text x="32" y="167" fill="#b0a898" font-size="10.5">Ney Flute</text>
+  <circle cx="22" cy="183" r="3" fill="#d4aa40"/>
+  <text x="32" y="187" fill="#b0a898" font-size="10.5">Ziggurat Horn</text>
+  <rect x="10" y="198" width="190" height="20" rx="2" fill="#080a10"/>
+  <text x="22" y="212" fill="#d4aa40" font-size="9" letter-spacing="1">▸ BASS</text>
+  <text x="170" y="212" fill="#807468" font-size="8">3</text>
+  <rect x="10" y="220" width="190" height="20" rx="2" fill="#080a10"/>
+  <text x="22" y="234" fill="#d4aa40" font-size="9" letter-spacing="1">▾ KEYS</text>
+  <text x="170" y="234" fill="#807468" font-size="8">5</text>
+  <circle cx="22" cy="253" r="3" fill="#40b0a0"/>
+  <text x="32" y="257" fill="#b0a898" font-size="10.5">Kithara Pluck</text>
+  <circle cx="22" cy="273" r="3" fill="#40b0a0"/>
+  <text x="32" y="277" fill="#b0a898" font-size="10.5">Harp of Amun</text>
+  <circle cx="22" cy="293" r="3" fill="#40b0a0"/>
+  <text x="32" y="297" fill="#b0a898" font-size="10.5">Bronze Bell</text>
+  <rect x="10" y="308" width="190" height="20" rx="2" fill="#080a10"/>
+  <text x="22" y="322" fill="#d4aa40" font-size="9" letter-spacing="1">▾ PADS</text>
+  <text x="170" y="322" fill="#807468" font-size="8">5</text>
+  <circle cx="22" cy="343" r="3" fill="#60c090"/>
+  <text x="32" y="347" fill="#b0a898" font-size="10.5">Anunnaki Choir</text>
+  <circle cx="22" cy="363" r="3" fill="#60c090"/>
+  <text x="32" y="367" fill="#b0a898" font-size="10.5">Nile Drone</text>
+  <rect x="10" y="378" width="190" height="20" rx="2" fill="#080a10"/>
+  <text x="22" y="392" fill="#d4aa40" font-size="9" letter-spacing="1">▸ ATMOSPHERE</text>
+  <text x="170" y="392" fill="#807468" font-size="8">4</text>
+  <rect x="10" y="400" width="190" height="20" rx="2" fill="#080a10"/>
+  <text x="22" y="414" fill="#d4aa40" font-size="9" letter-spacing="1">▸ PERCUSSION</text>
+  <text x="170" y="414" fill="#807468" font-size="8">4</text>
+  <rect x="10" y="422" width="190" height="20" rx="2" fill="#080a10"/>
+  <text x="22" y="436" fill="#d4aa40" font-size="9" letter-spacing="1">▸ WORLD</text>
+  <text x="170" y="436" fill="#807468" font-size="8">3</text>
+
+  <!-- Center panel - Main synth area -->
+  <rect x="210" y="57" width="560" height="563" rx="0" fill="#080a10"/>
+  <!-- Tabs -->
+  <rect x="210" y="57" width="140" height="26" fill="#0c0e16"/>
+  <text x="255" y="74" fill="#d4aa40" font-size="10.5">Synth</text>
+  <line x1="210" y1="81" x2="350" y2="81" stroke="#d4aa40" stroke-width="2"/>
+  <text x="380" y="74" fill="#807468" font-size="10.5">Mod</text>
+  <text x="445" y="74" fill="#807468" font-size="10.5">FX</text>
+  <text x="500" y="74" fill="#807468" font-size="10.5">Matrix</text>
+  <line x1="210" y1="83" x2="770" y2="83" stroke="#252838" stroke-width="1"/>
+
+  <!-- Oscillator section -->
+  <text x="222" y="102" fill="#b0a898" font-size="9.5" letter-spacing="1.5">OSCILLATOR</text>
+  <!-- Engine selectors -->
+  <rect x="222" y="112" width="100" height="24" rx="4" fill="#12141e" stroke="#252838"/>
+  <text x="240" y="128" fill="#f0e8dc" font-size="10">Wavetable</text>
+  <rect x="328" y="112" width="80" height="24" rx="4" fill="#12141e" stroke="#252838"/>
+  <text x="352" y="128" fill="#807468" font-size="10">Algo 1</text>
+  <rect x="414" y="112" width="70" height="24" rx="4" fill="#12141e" stroke="#252838"/>
+  <text x="430" y="128" fill="#807468" font-size="10">Pluck</text>
+  <rect x="490" y="112" width="70" height="24" rx="4" fill="#12141e" stroke="#252838"/>
+  <text x="506" y="128" fill="#807468" font-size="10">Warm</text>
+
+  <!-- Knobs row -->
+  <g transform="translate(222,148)">
+    <!-- Knob template: circle + dot + label -->
+    <g transform="translate(0,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/>
+      <circle cx="22" cy="8" r="3" fill="#d4aa40"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">WT POS</text>
+    </g>
+    <g transform="translate(52,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/>
+      <circle cx="30" cy="10" r="3" fill="#d4aa40"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">MORPH</text>
+    </g>
+    <g transform="translate(110,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/>
+      <circle cx="14" cy="10" r="3" fill="#d4aa40"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">FB</text>
+    </g>
+    <g transform="translate(168,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#60c090"/>
+      <circle cx="22" cy="8" r="3" fill="#60c090"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">SIZE</text>
+    </g>
+    <g transform="translate(220,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#60c090"/>
+      <circle cx="30" cy="12" r="3" fill="#60c090"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">SCATTER</text>
+    </g>
+    <g transform="translate(278,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#60c090"/>
+      <circle cx="34" cy="18" r="3" fill="#60c090"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">BODY</text>
+    </g>
+    <g transform="translate(336,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#60c090"/>
+      <circle cx="22" cy="8" r="3" fill="#60c090"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">PICK</text>
+    </g>
+    <g transform="translate(394,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#60c090"/>
+      <circle cx="14" cy="12" r="3" fill="#60c090"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">STIFF</text>
+    </g>
+    <g transform="translate(446,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#60c090"/>
+      <circle cx="28" cy="10" r="3" fill="#60c090"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">DAMP</text>
+    </g>
+  </g>
+
+  <!-- Amplitude section -->
+  <text x="222" y="228" fill="#b0a898" font-size="9.5" letter-spacing="1.5">AMPLITUDE</text>
+  <g transform="translate(222,238)">
+    <g transform="translate(0,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/>
+      <circle cx="12" cy="14" r="3" fill="#e8a850"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">ATTACK</text>
+    </g>
+    <g transform="translate(52,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/>
+      <circle cx="22" cy="8" r="3" fill="#e8a850"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">DECAY</text>
+    </g>
+    <g transform="translate(104,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/>
+      <circle cx="32" cy="16" r="3" fill="#e8a850"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">SUSTAIN</text>
+    </g>
+    <g transform="translate(156,0)">
+      <circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/>
+      <circle cx="22" cy="8" r="3" fill="#e8a850"/>
+      <text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">RELEASE</text>
+    </g>
+    <!-- ADSR display -->
+    <rect x="210" y="4" width="160" height="60" rx="4" fill="#12141e" stroke="#252838"/>
+    <polyline points="218,56 228,12 248,36 280,36 310,56" fill="none" stroke="#e8a850" stroke-width="1.5" opacity="0.7"/>
+    <polygon points="218,56 228,12 248,36 280,36 310,56" fill="#e8a850" opacity="0.06"/>
+  </g>
+
+  <!-- Voice section -->
+  <text x="222" y="326" fill="#b0a898" font-size="9.5" letter-spacing="1.5">VOICE</text>
+  <g transform="translate(222,336)">
+    <g><circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/><circle cx="12" cy="14" r="3" fill="#e8a850"/><text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">GLIDE</text></g>
+    <g transform="translate(52,0)"><circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/><circle cx="22" cy="8" r="3" fill="#e8a850"/><text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">DETUNE</text></g>
+    <g transform="translate(104,0)"><circle cx="22" cy="22" r="18" fill="#12141e" stroke="#252838"/><circle cx="30" cy="12" r="3" fill="#e8a850"/><text x="22" y="52" fill="#b0a898" font-size="8.5" text-anchor="middle">SPREAD</text></g>
+    <rect x="172" y="10" width="100" height="24" rx="4" fill="#12141e" stroke="#252838"/>
+    <text x="196" y="27" fill="#b0a898" font-size="10">3 voices</text>
+    <rect x="280" y="10" width="80" height="24" rx="4" fill="#12141e" stroke="#252838"/>
+    <text x="304" y="27" fill="#b0a898" font-size="10">Poly</text>
+  </g>
+
+  <!-- Right panel -->
+  <rect x="775" y="57" width="200" height="563" rx="0" fill="#080a10"/>
+  <!-- Scope -->
+  <rect x="785" y="67" width="180" height="120" rx="6" fill="#12141e" stroke="#252838"/>
+  <text x="793" y="82" fill="#807468" font-size="7.5" letter-spacing="0.5">OSC</text>
+  <line x1="790" y1="127" x2="960" y2="127" stroke="#252838" stroke-width="0.5"/>
+  <polyline points="790,127 800,118 810,132 820,115 830,135 840,120 850,130 860,118 870,133 880,117 890,130 900,122 910,128 920,119 930,131 940,120 950,127 960,124" fill="none" stroke="#d4aa40" stroke-width="1.2" opacity="0.7"/>
+
+  <!-- XY Pad -->
+  <rect x="785" y="208" width="180" height="160" rx="6" fill="#12141e" stroke="#252838"/>
+  <line x1="875" y1="213" x2="875" y2="363" stroke="#252838" stroke-width="0.5"/>
+  <line x1="790" y1="288" x2="960" y2="288" stroke="#252838" stroke-width="0.5"/>
+  <circle cx="900" cy="268" r="5" fill="#d4aa40"/>
+  <circle cx="900" cy="268" r="2" fill="#080a10"/>
+  <text x="940" y="358" fill="#807468" font-size="7.5" text-anchor="end">CUTOFF</text>
+  <text x="793" y="220" fill="#807468" font-size="7.5">RESO</text>
+
+  <!-- Footer -->
+  <rect x="0" y="620" width="980" height="20" fill="#0c0e16"/>
+  <line x1="0" y1="620" x2="980" y2="620" stroke="#252838" stroke-width="1"/>
+  <text x="15" y="634" fill="#807468" font-size="9">Voices: 3/24  |  SR: 48000 Hz  |  Buffer: 512  |  Mem: ~5.2 MB</text>
+  <text x="870" y="634" fill="#807468" font-size="9">v1.0</text>
+</svg>
