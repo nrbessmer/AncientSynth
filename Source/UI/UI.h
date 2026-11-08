@@ -3,17 +3,19 @@
 #include <set>
 #include "../DSP.h"
 #include "../Presets.h"
+#include "../TullyNeon.h"
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  PALETTE & FONTS
 // ─────────────────────────────────────────────────────────────────────────────
 namespace Pal {
     const juce::Colour
-        Void     {0xFF080A10}, Surface  {0xFF0C0E16},
-        Raised   {0xFF12141E}, Border   {0xFF252838},
+        // neon family surfaces; Ancient Synth keeps its amber accent
+        Void     = neon::Pal::night0, Surface = neon::Pal::night1,
+        Raised   = neon::Pal::glassHi, Border = neon::Pal::edge,
         Amber    {0xFFE8A850}, AmberDim {0xFFB07830},
         Sage     {0xFF60C090}, Purple   {0xFFB898F0},
-        Text     {0xFFF0E8DC}, TextDim  {0xFFB0A898}, TextFaint{0xFF807468},
+        Text     = neon::Pal::text, TextDim = neon::Pal::dim, TextFaint{0xFF6A6688},
         Gold     {0xFFD4AA40}, Teal     {0xFF40B0A0}, Crimson  {0xFFD07070};
 }
 namespace Fonts {
@@ -26,9 +28,9 @@ namespace Fonts {
 // ─────────────────────────────────────────────────────────────────────────────
 //  LOOK AND FEEL
 // ─────────────────────────────────────────────────────────────────────────────
-class AncientLAF : public juce::LookAndFeel_V4 {
+class AncientLAF : public neon::LookAndFeel {
 public:
-    AncientLAF() {
+    AncientLAF() : neon::LookAndFeel (Pal::Amber) {
         using C = juce::Colour;
         setColour(juce::ResizableWindow::backgroundColourId,      Pal::Void);
         setColour(juce::ComboBox::backgroundColourId,             Pal::Raised);
@@ -51,86 +53,39 @@ public:
         setColour(juce::ToggleButton::textColourId,               Pal::TextDim);
     }
 
-    void drawRotarySlider(juce::Graphics& g, int x, int y, int w, int h,
-                          float pos, float startA, float endA, juce::Slider& s) override {
-        float cx=x+w*.5f, cy=y+h*.5f, r=std::min(w,h)*.38f;
-        auto  pi = juce::MathConstants<float>::pi;
 
-        if (s.isMouseOverOrDragging()) {   // hover glow
-            g.setColour(Pal::Amber.withAlpha(s.isMouseButtonDown()?0.22f:0.12f));
-            g.fillEllipse(cx-r*1.12f,cy-r*1.12f,r*2.24f,r*2.24f);
-        }
-        juce::Path track; track.addCentredArc(cx,cy,r,r,0,startA,endA,true);
-        g.setColour(Pal::Border);
-        g.strokePath(track,juce::PathStrokeType(2.5f,juce::PathStrokeType::curved,juce::PathStrokeType::rounded));
 
-        if (pos > 0.001f) {
-            juce::Path arc; arc.addCentredArc(cx,cy,r,r,0,startA,startA+pos*(endA-startA),true);
-            auto ac = s.findColour(juce::Slider::rotarySliderFillColourId);
-            g.setColour(ac.isOpaque() ? ac : Pal::Amber);
-            g.strokePath(arc,juce::PathStrokeType(2.5f,juce::PathStrokeType::curved,juce::PathStrokeType::rounded));
-        }
-        g.setColour(Pal::Raised);  g.fillEllipse(cx-r*.72f,cy-r*.72f,r*1.44f,r*1.44f);
-        g.setColour(Pal::Border);  g.drawEllipse(cx-r*.72f,cy-r*.72f,r*1.44f,r*1.44f,1.f);
-        float va=startA+pos*(endA-startA);
-        float ix=cx+(r*.52f)*std::cos(va-pi*.5f), iy=cy+(r*.52f)*std::sin(va-pi*.5f);
-        g.setColour(Pal::Amber); g.fillEllipse(ix-3.f,iy-3.f,6.f,6.f);
+
+    void drawTabButton(juce::TabBarButton& btn, juce::Graphics& g, bool hov, bool) override {
+        const bool active=btn.isFrontTab();   // the bool arguments are mouse-over / mouse-down
+        auto r=btn.getActiveArea().toFloat().reduced(3.f,4.f);
+        if(active){
+            g.setColour(Pal::Amber.withAlpha(.14f)); g.fillRoundedRectangle(r,6.f);
+            juce::Path u; u.startNewSubPath(r.getX()+8,r.getBottom()-1); u.lineTo(r.getRight()-8,r.getBottom()-1);
+            neon::strokeGlow(g,u,Pal::Amber,2.f);
+        } else if(hov){ g.setColour(juce::Colours::white.withAlpha(.05f)); g.fillRoundedRectangle(r,6.f); }
+        g.setColour(active?Pal::Amber:hov?Pal::Text:Pal::TextDim);
+        auto f=Fonts::label(11.5f); f.setBold(true); f.setExtraKerningFactor(.12f);
+        g.setFont(f); g.drawText(btn.getButtonText(),r.toNearestInt(),juce::Justification::centred);
+    }
+    void drawTabbedButtonBarBackground(juce::TabbedButtonBar&, juce::Graphics&) override {}
+    void drawTabAreaBehindFrontButton(juce::TabbedButtonBar& bar, juce::Graphics& g, int w, int h) override {
+        juce::ignoreUnused(bar); g.setColour(Pal::Border); g.fillRect(0,h-1,w,1);
     }
 
-    void drawComboBox(juce::Graphics& g, int w, int h, bool, int,int,int,int, juce::ComboBox&) override {
-        g.setColour(Pal::Raised); g.fillRoundedRectangle(0,0,w,h,3.f);
-        g.setColour(Pal::Border); g.drawRoundedRectangle(.5f,.5f,w-1,h-1,3.f,1.f);
-        juce::Path arr; float ax=w-12.f, ay=h*.5f;
-        arr.addTriangle(ax,ay-3,ax+7,ay-3,ax+3.5f,ay+3);
-        g.setColour(Pal::TextDim); g.fillPath(arr);
-    }
-    juce::Font getComboBoxFont(juce::ComboBox&) override { return Fonts::label(11.f); }
 
-    void drawButtonBackground(juce::Graphics& g, juce::Button& b,
-                               const juce::Colour&, bool hov, bool dn) override {
-        auto r=b.getLocalBounds().toFloat();
-        juce::Colour f=b.getToggleState()?Pal::AmberDim:hov?Pal::Raised.brighter(.05f):Pal::Raised;
-        if(dn)f=f.darker(.1f);
-        g.setColour(f); g.fillRoundedRectangle(r,3.f);
-        g.setColour(b.getToggleState()?Pal::Amber:Pal::Border);
-        g.drawRoundedRectangle(r.reduced(.5f),3.f,1.f);
-    }
-    juce::Font getTextButtonFont(juce::TextButton&,int) override { return Fonts::label(11.f); }
-
-    void drawTabButton(juce::TabBarButton& btn, juce::Graphics& g, bool active, bool hov) override {
-        auto r=btn.getActiveArea().toFloat();
-        g.setColour(active?Pal::Surface:Pal::Void); g.fillRect(r);
-        g.setColour(active?Pal::Amber:hov?Pal::TextDim:Pal::TextFaint);
-        g.setFont(Fonts::label(11.f)); g.drawText(btn.getButtonText(),r.toNearestInt(),juce::Justification::centred);
-        if(active){g.setColour(Pal::Amber);g.fillRect(r.removeFromBottom(2.f));}
-        g.setColour(Pal::Border); g.drawLine(r.getRight(),r.getY(),r.getRight(),r.getBottom(),1.f);
-    }
-
-    void drawToggleButton(juce::Graphics& g, juce::ToggleButton& btn, bool, bool) override {
-        auto r=btn.getLocalBounds().toFloat();
-        bool on=btn.getToggleState();
-        float bw=28,bh=14,bx=4,by=r.getCentreY()-bh*.5f;
-        g.setColour(on?Pal::AmberDim:Pal::Raised); g.fillRoundedRectangle(bx,by,bw,bh,bh*.5f);
-        g.setColour(on?Pal::Amber:Pal::Border);     g.drawRoundedRectangle(bx,by,bw,bh,bh*.5f,1.f);
-        float dx=on?bx+bw-bh+2:bx+2;
-        g.setColour(on?Pal::Amber:Pal::TextDim); g.fillEllipse(dx,by+2,bh-4,bh-4);
-        g.setFont(Fonts::label(10.5f)); g.setColour(on?Pal::Text:Pal::TextDim);
-        g.drawText(btn.getButtonText(),int(bx+bw+6),0,r.getWidth()-int(bw+10),r.getHeight(),
-                   juce::Justification::centredLeft);
-    }
-
+    // Pages sit on the editor's neon backdrop: only a light veil for legibility.
     static void bg(juce::Graphics& g, juce::Rectangle<int> b) {
-        g.setColour(Pal::Void); g.fillRect(b);
-        g.setColour(Pal::Border.withAlpha(.07f));
-        for(int x=b.getX();x<b.getRight();x+=32) g.drawVerticalLine(x,float(b.getY()),float(b.getBottom()));
-        for(int y=b.getY();y<b.getBottom();y+=32) g.drawHorizontalLine(y,float(b.getX()),float(b.getRight()));
+        g.setColour(Pal::Void.withAlpha(.28f)); g.fillRect(b);
     }
     static void panel(juce::Graphics& g, juce::Rectangle<float> b) {
-        g.setColour(Pal::Raised); g.fillRoundedRectangle(b,4.f);
-        g.setColour(Pal::Border); g.drawRoundedRectangle(b.reduced(.5f),4.f,1.f);
+        neon::glassPanel(g,b,Pal::Amber,{},6.f,.70f);
     }
     static void sectionLabel(juce::Graphics& g, juce::Rectangle<int> b, const juce::String& t) {
-        g.setFont(Fonts::label(10.5f)); g.setColour(Pal::TextDim);
+        g.setColour(Pal::Amber); g.fillRoundedRectangle((float)b.getX(),b.getCentreY()-5.f,3.f,10.f,1.5f);
+        b.removeFromLeft(8);
+        auto f=Fonts::label(10.5f); f.setBold(true); f.setExtraKerningFactor(.14f);
+        g.setFont(f); g.setColour(Pal::Text);
         g.drawText(t.toUpperCase(),b,juce::Justification::centredLeft);
     }
 };
@@ -871,6 +826,8 @@ public:
 private:
     AncientSynthProcessor& proc_;
     AncientLAF laf_;
+    neon::BackdropCache backdrop_;
+    juce::Image tully_;   // member, not function-static: a static Image outlives JUCE at host quit
     juce::Label title_,pName_,pCat_,vLabel_;
     juce::TextButton prev_{"<"},next_{">"};
     juce::ComboBox scCombo_,rtCombo_;

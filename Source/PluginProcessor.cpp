@@ -491,10 +491,10 @@ AncientSynthEditor::AncientSynthEditor(AncientSynthProcessor& p)
     browser_.onSelect = [this](int i){ proc_.getPresets().load(i); updatePatch(); };
     addAndMakeVisible(browser_);
 
-    tabs_.addTab("OSCILLATOR",   Pal::Void, &synthP_,     false);
-    tabs_.addTab("MOD / FILTER", Pal::Void, &modP_,       false);
-    tabs_.addTab("EFFECTS",      Pal::Void, &fxP_,        false);
-    tabs_.addTab("MOD MATRIX",   Pal::Void, &modMatrixP_, false);
+    tabs_.addTab("OSCILLATOR",   juce::Colours::transparentBlack, &synthP_,     false);
+    tabs_.addTab("MOD / FILTER", juce::Colours::transparentBlack, &modP_,       false);
+    tabs_.addTab("EFFECTS",      juce::Colours::transparentBlack, &fxP_,        false);
+    tabs_.addTab("MOD MATRIX",   juce::Colours::transparentBlack, &modMatrixP_, false);
     tabs_.setTabBarDepth(28); tabs_.setOutline(0);
     addAndMakeVisible(tabs_);
     modP_.setScale(&proc_.getScale());
@@ -537,21 +537,23 @@ void AncientSynthEditor::updatePatch() {
 }
 
 void AncientSynthEditor::paint(Graphics& g) {
-    g.fillAll(Pal::Void);
-    AncientLAF::bg(g, getLocalBounds());
-    g.setColour(Pal::Surface); g.fillRect(getLocalBounds().removeFromTop(52));
+    neon::paintBackdrop(g, getLocalBounds(), Pal::Amber, backdrop_);
+    g.setGradientFill(juce::ColourGradient(juce::Colours::black.withAlpha(.6f), 0, 0, juce::Colours::black.withAlpha(.2f), 0, 52, false));
+    g.fillRect(getLocalBounds().removeFromTop(52));
+    g.setGradientFill(juce::ColourGradient(neon::Pal::pink, 0, 0, neon::Pal::cyan, (float) getWidth(), 0, false));
+    g.fillRect(0, 51, getWidth(), 2);
     g.setColour(Pal::Border);
-    g.fillRect(0, 52, getWidth(), 1);
     g.fillRect(0, getHeight()-21, getWidth(), 1);
     g.fillRect(206, 53, 1, getHeight()-74);
     g.fillRect(getWidth()-207, 53, 1, getHeight()-74);
 
     // Tully EDM Vibe brand block, right end of the header
-    static const juce::Image tully = juce::ImageCache::getFromMemory (TullyLogoData::png, (int) TullyLogoData::pngSize);
+    if (! tully_.isValid()) tully_ = juce::ImageCache::getFromMemory (TullyLogoData::png, (int) TullyLogoData::pngSize);
+    const auto& tully = tully_;
     const int bx = getWidth() - 214;
     if (tully.isValid())
         g.drawImageWithin (tully, bx, 4, 44, 44, juce::RectanglePlacement::centred, false);
-    g.setColour (Pal::Amber); g.setFont (Fonts::label (11.f));
+    g.setColour (neon::Pal::pink); g.setFont (Fonts::label (11.f));
     g.drawText ("TULLY EDM VIBE", bx + 50, 9, 160, 16, juce::Justification::centredLeft);
     g.setColour (Pal::TextDim); g.setFont (Fonts::mono (10.f));
     g.drawText ("info@tullyedmvibe.com", bx + 50, 27, 160, 16, juce::Justification::centredLeft);
