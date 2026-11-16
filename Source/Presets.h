@@ -421,6 +421,119 @@ static const std::vector<Preset> kPresets = {
    P("fx_rev_mix",0.35f),P("fx_rev_size",0.6f),P("fx_rev_damp",0.2f),
    P("fx_dly_mix",0.2f),P("fx_dly_time",0.18f),P("fx_dly_fb",0.35f),
    P("master_vol",0.92f)}},
+// ═══════════════════════════════════════════════════════════════════════
+//  1.1: TWELVE MORE — more ancient instruments, and ancient colours for modern tracks
+// ═══════════════════════════════════════════════════════════════════════
+
+// Fretless oud: warm plucked string, quarter-tone maqam, slow vibrato on held notes
+{ "Oud Taqsim","Lead",
+  {P("engine",3),P("ks_color",0),P("ks_body",0.62),P("ks_pick",0.35),P("ks_stretch",0.55),
+   P("amp_attack",0.002f),P("amp_decay",0.9f),P("amp_sustain",0.25f),P("amp_release",0.45f),
+   P("filt_type",1),P("filt_cutoff",3600),P("filt_res",0.18f),P("filt_keytrack",0.4f),
+   P("lfo1_rate",5.2f),P("lfo1_depth",0.06f),P("lfo1_dest",0),P("scale",12),P("tuning_system",4),
+   P("fx_rev_mix",0.38f),P("fx_rev_size",0.65f),P("fx_rev_damp",0.3f),P("fx_dly_mix",0.12f),
+   P("fx_dly_time",0.3f),P("fx_dly_fb",0.25f),P("master_vol",0.9f),P("master_gain",5)}},
+
+// Armenian duduk: soft reed, slow breath attack, a sad wide vibrato
+{ "Duduk Lament","Lead",
+  {P("engine",0),P("wt_shape",3),P("wt_pos",0.3f),P("wt_morph",0.1f),P("amp_attack",0.14f),
+   P("amp_decay",0.4f),P("amp_sustain",0.75f),P("amp_release",0.5f),P("filt_type",0),
+   P("filt_cutoff",2200),P("filt_res",0.22f),P("filt_drive",1.3f),P("filt_keytrack",0.45f),
+   P("filt_env_amt",0.25f),P("filt_attack",0.12f),P("filt_decay",0.6f),P("filt_sustain",0.4f),
+   P("lfo1_rate",4.6f),P("lfo1_depth",0.12f),P("lfo1_dest",0),P("lfo2_rate",0.18f),
+   P("lfo2_depth",0.15f),P("lfo2_dest",1),P("poly_mode",2),P("glide",0.08f),P("scale",7),
+   P("tuning_system",1),P("fx_rev_mix",0.5f),P("fx_rev_size",0.75f),P("fx_rev_damp",0.25f),
+   P("master_vol",0.9f)}},
+
+// Ram's-horn call: raw brassy FM, a scoop into each note, big hall
+{ "Shofar Call","Lead",
+  {P("engine",1),P("fm_algo",4),P("fm_feedback",0.62f),P("amp_attack",0.06f),P("amp_decay",0.5f),
+   P("amp_sustain",0.7f),P("amp_release",0.4f),P("filt_type",6),P("filt_cutoff",2600),
+   P("filt_res",0.3f),P("filt_drive",2.2f),P("filt_keytrack",0.5f),P("filt_env_amt",0.5f),
+   P("filt_attack",0.05f),P("filt_decay",0.4f),P("filt_sustain",0.4f),P("poly_mode",1),
+   P("glide",0.12f),P("lfo1_rate",5.5f),P("lfo1_depth",0.05f),P("lfo1_dest",0),
+   P("fx_dist_amt",0.2f),P("fx_dist_type",1),P("fx_rev_mix",0.55f),P("fx_rev_size",0.9f),
+   P("fx_rev_damp",0.2f),P("master_vol",0.85f)}},
+
+// Hammered santur: bright metal strings, ringing sustain, a delay that sparkles
+{ "Santur Shimmer","Keys",
+  {P("engine",3),P("ks_color",2),P("ks_body",0.28),P("ks_pick",0.6),P("ks_stretch",0.88),
+   P("amp_attack",0.001f),P("amp_decay",1.6f),P("amp_sustain",0.2f),P("amp_release",1.2f),
+   P("filt_cutoff",9000),P("filt_res",0.1f),P("filt_keytrack",0.3f),P("scale",9),
+   P("tuning_system",4),P("fx_chr_mix",0.2f),P("fx_chr_rate",0.3f),P("fx_chr_depth",0.4f),
+   P("fx_dly_mix",0.24f),P("fx_dly_time",0.375f),P("fx_dly_fb",0.4f),P("fx_rev_mix",0.42f),
+   P("fx_rev_size",0.7f),P("master_vol",0.86f),P("master_gain",1)}},
+
+// The great lyre of Ur: soft gut strings, long ring, pentatonic Sumerian tuning
+{ "Harp of Ur","Keys",
+  {P("engine",3),P("ks_color",1),P("ks_body",0.55),P("ks_pick",0.2),P("ks_stretch",0.92),
+   P("amp_attack",0.002f),P("amp_decay",2.2f),P("amp_sustain",0.3f),P("amp_release",1.5f),
+   P("filt_type",1),P("filt_cutoff",4800),P("filt_res",0.12f),P("filt_keytrack",0.35f),
+   P("scale",1),P("tuning_system",3),P("fx_rev_mix",0.55f),P("fx_rev_size",0.85f),
+   P("fx_rev_damp",0.3f),P("stereo_width",1.3f),P("master_vol",0.9f)}},
+
+// A deep, clean sub with a touch of reed growl for desert and ethnic house
+{ "Desert Sub","Bass",
+  {P("engine",0),P("wt_shape",5),P("wt_pos",0.1f),P("amp_attack",0.004f),P("amp_decay",0.5f),
+   P("amp_sustain",0.85f),P("amp_release",0.2f),P("filt_type",1),P("filt_cutoff",420),
+   P("filt_res",0.2f),P("filt_drive",1.8f),P("filt_env_amt",0.3f),P("filt_decay",0.18f),
+   P("filt_sustain",0.2f),P("poly_mode",1),P("glide",0.03f),P("fx_dist_amt",0.12f),
+   P("fx_dist_type",2),P("stereo_width",0.f),P("master_vol",0.85f),P("master_gain",-3)}},
+
+// Short FM pluck bass in Phrygian Dominant: tight, bouncy, great for afro and organic house
+{ "Babylon Pluck Bass","Bass",
+  {P("engine",1),P("fm_algo",1),P("fm_feedback",0.35f),P("amp_attack",0.001f),P("amp_decay",0.28f),
+   P("amp_sustain",0.15f),P("amp_release",0.12f),P("filt_type",6),P("filt_cutoff",1400),
+   P("filt_res",0.35f),P("filt_drive",2.f),P("filt_env_amt",0.6f),P("filt_attack",0.001f),
+   P("filt_decay",0.18f),P("filt_sustain",0.05f),P("poly_mode",1),P("scale",8),
+   P("stereo_width",0.2f),P("master_vol",0.88f),P("master_gain",2)}},
+
+// A women's temple choir: soft vocal grains, slow swell, wide stone hall
+{ "Temple Priestess Choir","Pad",
+  {P("engine",2),P("gr_source",1),P("gr_size",0.14f),P("gr_scatter",0.25f),P("gr_density",0.85f),
+   P("gr_pitch_rnd",0.02f),P("amp_attack",0.9f),P("amp_decay",0.4f),P("amp_sustain",0.8f),
+   P("amp_release",1.8f),P("filt_cutoff",5200),P("filt_res",0.12f),P("lfo1_rate",0.2f),
+   P("lfo1_depth",0.1f),P("lfo1_dest",1),P("unison",2),P("unison_spread",0.4f),P("scale",11),
+   P("tuning_system",5),P("fx_chr_mix",0.25f),P("fx_chr_rate",0.18f),P("fx_rev_mix",0.65f),
+   P("fx_rev_size",0.9f),P("fx_rev_damp",0.25f),P("master_vol",0.88f)}},
+
+// Sunrise over the river: a warm vocal wavetable pad that slowly opens up
+{ "Nile Dawn","Pad",
+  {P("engine",0),P("wt_shape",7),P("wt_pos",0.35f),P("wt_morph",0.3f),P("amp_attack",1.4f),
+   P("amp_decay",0.6f),P("amp_sustain",0.85f),P("amp_release",2.f),P("filt_type",1),
+   P("filt_cutoff",1800),P("filt_res",0.2f),P("filt_env_amt",0.45f),P("filt_attack",2.5f),
+   P("filt_decay",1.5f),P("filt_sustain",0.6f),P("filt_release",2.f),P("lfo2_rate",0.07f),
+   P("lfo2_depth",0.2f),P("lfo2_dest",1),P("unison",3),P("unison_spread",0.5f),P("detune",8),
+   P("fx_chr_mix",0.3f),P("fx_chr_rate",0.2f),P("fx_rev_mix",0.55f),P("fx_rev_size",0.85f),
+   P("master_vol",0.86f)}},
+
+// Heat shimmer: glassy grains that drift and scatter, for intros and breakdowns
+{ "Mirage","Atmo",
+  {P("engine",2),P("gr_source",6),P("gr_size",0.06f),P("gr_scatter",0.75f),P("gr_density",0.7f),
+   P("gr_pitch_rnd",0.12f),P("amp_attack",1.2f),P("amp_decay",0.6f),P("amp_sustain",0.7f),
+   P("amp_release",2.5f),P("filt_type",3),P("filt_cutoff",3000),P("filt_res",0.3f),
+   P("lfo1_rate",0.12f),P("lfo1_depth",0.4f),P("lfo1_dest",1),P("lfo2_rate",0.3f),
+   P("lfo2_depth",0.3f),P("lfo2_dest",4),P("fx_dly_mix",0.3f),P("fx_dly_time",0.5f),
+   P("fx_dly_fb",0.55f),P("fx_rev_mix",0.7f),P("fx_rev_size",0.95f),P("master_vol",0.88f),P("master_gain",15)}},
+
+// Frame drum with a buzzing snare: deep thump and a dry rattle
+{ "Bendir Frame Drum","Perc",
+  {P("engine",3),P("ks_color",3),P("ks_body",0.92),P("ks_pick",0.55),P("ks_stretch",0.04),
+   P("amp_attack",0.001f),P("amp_decay",0.35f),P("amp_sustain",0.f),P("amp_release",0.25f),
+   P("filt_type",0),P("filt_cutoff",2400),P("filt_res",0.25f),P("filt_drive",1.6f),
+   P("filt_env_amt",0.4f),P("filt_attack",0.001f),P("filt_decay",0.08f),P("filt_sustain",0.f),
+   P("fx_rev_mix",0.25f),P("fx_rev_size",0.5f),P("master_vol",0.9f),P("master_gain",6)}},
+
+// Hypnotic 16th arp in Phrygian Dominant: the sound of desert and melodic techno
+{ "Desert Techno Arp","World",
+  {P("engine",1),P("fm_algo",2),P("fm_feedback",0.45f),P("amp_attack",0.002f),P("amp_decay",0.22f),
+   P("amp_sustain",0.1f),P("amp_release",0.15f),P("filt_type",6),P("filt_cutoff",2600),
+   P("filt_res",0.4f),P("filt_drive",1.6f),P("filt_env_amt",0.5f),P("filt_attack",0.001f),
+   P("filt_decay",0.2f),P("filt_sustain",0.1f),P("lfo2_rate",0.1f),P("lfo2_depth",0.25f),
+   P("lfo2_dest",1),P("arp_on",1),P("arp_mode",2),P("arp_rate",2),P("arp_gate",0.55f),
+   P("arp_swing",0.08f),P("scale",8),P("fx_dly_mix",0.25f),P("fx_dly_time",0.375f),
+   P("fx_dly_fb",0.45f),P("fx_rev_mix",0.35f),P("fx_rev_size",0.7f),P("master_vol",0.86f)}},
+
 };
 #undef P
 

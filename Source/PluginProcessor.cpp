@@ -344,7 +344,7 @@ void AncientSynthProcessor::processBlock(AudioBuffer<float>& buf, MidiBuffer& mi
         }
         synth_.allNotesOff(0, false);
         fx_.reset(currentSR);
-        arp_.held.clear();
+        arp_.reset();
         paramsDirty_.store(true);
     }
 
@@ -385,7 +385,8 @@ void AncientSynthProcessor::processBlock(AudioBuffer<float>& buf, MidiBuffer& mi
         }
     }
 
-    if (arpOn) {
+    arp_.on = arpOn;
+    {
         arp_.mode    = int(*apvts_.getRawParameterValue("arp_mode"));
         arp_.gate    = *apvts_.getRawParameterValue("arp_gate");
         arp_.rateDiv = [](int i){ return i==0?4:i==1?8:i==2?16:32; }
@@ -394,12 +395,8 @@ void AncientSynthProcessor::processBlock(AudioBuffer<float>& buf, MidiBuffer& mi
         if (auto* ph = getPlayHead())
             if (auto pos = ph->getPosition())
                 if (auto b = pos->getBpm()) bpm = *b;
-        const int note = arp_.tick(currentSR, bpm);
-        if (note >= 0) {
-            quantised.addEvent(MidiMessage::noteOn(1, note, (uint8)100), 0);
-            quantised.addEvent(MidiMessage::noteOff(1, note),
-                               int(buf.getNumSamples() * arp_.gate));
-        }
+        if (! arpOn) arp_.held.clear();      // a note left sounding when the arp is switched off is released below
+        arp_.process(quantised, buf.getNumSamples(), currentSR, bpm);
     }
 
     // ── Render voices ────────────────────────────────────────────────────────

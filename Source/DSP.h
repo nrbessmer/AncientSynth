@@ -479,29 +479,49 @@ private:
 //  ARPEGGIATOR
 // ─────────────────────────────────────────────────────────────────────────────
 struct Arpeggiator {
-    bool  on=false; int mode=0, rateDiv=8, step=0, dir=1;
+    // Sample-accurate arpeggiator. (1.0 advanced its clock once per audio block while
+    // comparing it with a step length in samples, and was never switched on, so it never played.)
+    bool  on=false; int mode=0, rateDiv=8, step=-1, dir=1;
     float gate=0.8f;
-    std::vector<int> held;
-    double phase=0; std::mt19937 rng{55};
+    std::vector<int> held;      // in the order played
+    double toNext=0;            // samples until the next step
+    int    playing=-1, offIn=0; // sounding note and samples until its note-off
+    std::mt19937 rng{55};
 
-    void noteOn (int n) { held.push_back(n); }
+    void noteOn (int n) { if (std::find(held.begin(),held.end(),n)==held.end()) held.push_back(n); }
     void noteOff(int n) { held.erase(std::remove(held.begin(),held.end(),n),held.end()); }
+    void reset() { held.clear(); step=-1; dir=1; toNext=0; playing=-1; offIn=0; }
 
-    int tick(double sr, double bpm) {
-        if (!on || held.empty()) return -1;
-        phase++;
-        double dur = 60.0 / (bpm * rateDiv / 4.0) * sr;
-        if (phase < dur) return -1;
-        phase = 0;
-        int n = int(held.size());
+    int pick() {
+        std::vector<int> order = held;
+        if (mode != 4) std::sort(order.begin(), order.end());   // Up / Down / UpDown / Random walk the pitches
+        const int n = int(order.size());
         switch (mode) {
-            case 0: step=(step+1)%n; break;
-            case 1: step=(step-1+n)%n; break;
-            case 2: step+=dir; if(step>=n){step=n-2;dir=-1;} if(step<0){step=1;dir=1;} break;
-            case 3: step=rng()%n; break;
-            default:step=(step+1)%n; break;
+            case 1:  step = (step <= 0 ? n : step) - 1; break;
+            case 2:  if (n == 1) { step = 0; break; }
+                     step += dir; if (step >= n) { step = n - 2; dir = -1; } if (step < 0) { step = 1; dir = 1; } break;
+            case 3:  step = int(rng() % unsigned(n)); break;
+            default: step = (step + 1) % n; break;
         }
-        return held[step % held.size()];
+        step = ((step % n) + n) % n;
+        return order[size_t(step)];
+    }
+
+    // Writes this block's arp notes into out.
+    void process(juce::MidiBuffer& out, int numSamples, double sr, double bpm) {
+        const double dur = juce::jmax(1.0, 60.0 / (juce::jmax(20.0, bpm) * rateDiv / 4.0) * sr);
+        for (int s = 0; s < numSamples; ++s) {
+            if (playing >= 0 && --offIn <= 0) { out.addEvent(juce::MidiMessage::noteOff(1, playing), s); playing = -1; }
+            if (! on || held.empty()) { toNext = 0; step = -1; dir = 1; continue; }   // next press starts at once
+            if (toNext <= 0) {
+                if (playing >= 0) { out.addEvent(juce::MidiMessage::noteOff(1, playing), s); playing = -1; }
+                playing = pick();
+                out.addEvent(juce::MidiMessage::noteOn(1, playing, (juce::uint8) 100), s);
+                offIn = juce::jmax(1, int(dur * juce::jlimit(0.05f, 1.0f, gate)));
+                toNext += dur;
+            }
+            toNext -= 1.0;
+        }
     }
 };
 
