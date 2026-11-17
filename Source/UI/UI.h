@@ -844,4 +844,5 @@ private:
     std::unique_ptr<CA> scA_,rtA_;
     void timerCallback() override;
     void updatePatch();
+    int  shownPreset_ = -1;   // 3.3.1: preset the editor shows (follows host program changes)
 };

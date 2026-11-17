@@ -2,6 +2,7 @@
 #define ANCIENT_DEBUG 0
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include "TullyLicence.h"
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_dsp/juce_dsp.h>
 #include "Engines.h"
@@ -239,6 +240,8 @@ AncientSynthProcessor::AncientSynthProcessor()
       apvts_(*this,nullptr,"AncientSynth",createParams()),
       presets_(apvts_)
 {
+    tully::licence ("Ancient Synth");   // purchase activation (TullyLicence.h)
+
     synth_.addSound(new AncientSound());
     for (int i=0;i<16;++i) synth_.addVoice(new AncientVoice());
 
@@ -323,6 +326,8 @@ void AncientSynthProcessor::syncVoiceParams() {
 // ─── Process block ────────────────────────────────────────────────────────────
 void AncientSynthProcessor::processBlock(AudioBuffer<float>& buf, MidiBuffer& midi)
 {
+    if (! tully::licence().ok()) { buf.clear(); midi.clear(); return; }   // not activated yet: silent
+
     juce::ScopedNoDenormals noDenormals;
     const double currentSR = getSampleRate();
 
@@ -506,10 +511,14 @@ AncientSynthEditor::AncientSynthEditor(AncientSynthProcessor& p)
 
     updatePatch();
     startTimerHz(30);
+
+    tully::addActivation (*this);   // activation screen until this Mac is licensed
 }
 
 void AncientSynthEditor::timerCallback() {
     scope_.pushBuffer(proc_.getOscBuf()); scope_.repaint();
+    // 3.3.1: follow a preset change made by the host (Logic's preset menu, automation), not only clicks
+    if (proc_.getPresets().currentIndex() != shownPreset_) { shownPreset_ = proc_.getPresets().currentIndex(); updatePatch(); }
     const int v = proc_.activeVoices();
     vLabel_.setText(String(v) + (v==1?" voice":" voices"), dontSendNotification);
     // Footer stats: voices, sample rate, buffer size, estimated memory
@@ -528,6 +537,7 @@ void AncientSynthEditor::timerCallback() {
 
 void AncientSynthEditor::updatePatch() {
     auto& pm = proc_.getPresets();
+    shownPreset_ = pm.currentIndex();
     pName_.setText(pm.name(),     dontSendNotification);
     pCat_ .setText(pm.category(), dontSendNotification);
     browser_.selectPreset(pm.currentIndex());
